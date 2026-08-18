@@ -1,7 +1,17 @@
+"use client";
 import React from "react";
 import NavLink from "./NavLink";
+import Link from "next/link";
+import Image from "next/image";
+import { signOut, useSession } from "next-auth/react";
 
 const Navbar = () => {
+  const session = useSession();
+
+  const {} = session.data || {};
+
+  const isLoggedIn = session.status === "authenticated";
+
   const link = (
     <>
       <li>
@@ -9,9 +19,6 @@ const Navbar = () => {
       </li>
       <li>
         <NavLink href={"/about"}>About</NavLink>
-      </li>
-      <li>
-        <NavLink href={"/leads"}>All Leads</NavLink>
       </li>
       <li>
         <NavLink href={"/dashboard"}>Dashboard</NavLink>
@@ -47,13 +54,35 @@ const Navbar = () => {
             {link}
           </ul>
         </div>
-        <a className="btn btn-ghost text-xl">daisyUI</a>
+        <a className="btn btn-ghost text-xl">
+          <Image
+            height={200}
+            width={200}
+            alt="lead gen logo"
+            src={"/assets/logo.png"}
+          ></Image>
+        </a>
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">{link}</ul>
       </div>
-      <div className="navbar-end">
-        <a className="btn">Button</a>
+      <div className="navbar-end space-x-2">
+        {isLoggedIn ? (
+          <>
+            <button onClick={() => signOut()} className="btn btn-outline">
+              Sign Out
+            </button>
+          </>
+        ) : (
+          <>
+            <Link className="btn btn-outline" href={"/login"}>
+              Login
+            </Link>
+            <Link className="btn btn-outline" href={"/register"}>
+              Register
+            </Link>
+          </>
+        )}
       </div>
     </div>
   );

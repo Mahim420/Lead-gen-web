@@ -44,13 +44,7 @@ const layout = ({ children }) => {
               <Link href={"/dashboard/gen-leads"}>Generate Leads</Link>
             </li>
             <li>
-              <a>Search History</a>
-            </li>
-            <li>
-              <a>Saved Leads</a>
-            </li>
-            <li>
-              <a>Settings</a>
+              <Link href={"/dashboard/leads"}>Generated Leads</Link>
             </li>
           </ul>
         </aside>

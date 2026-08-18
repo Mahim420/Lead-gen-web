@@ -2,10 +2,13 @@
 
 import Form from "@/components/Dashboard/Form";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import { FaUserEdit } from "react-icons/fa";
 
 const GenLeads = () => {
+  const [leads, setLeads] = useState([]);
+  console.log(leads);
+
   return (
     <div>
       <section>
@@ -43,7 +46,7 @@ const GenLeads = () => {
                       </p>
                     </div>
                   </div>
-                  <Form></Form>
+                  <Form setLeads={setLeads}></Form>
                 </div>
               </div>
             </div>

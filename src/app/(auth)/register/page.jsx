@@ -1,0 +1,108 @@
+"use client";
+
+import { signIn } from "next-auth/react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+
+export default function Register() {
+  const router = useRouter();
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    const name = e.target.name.value;
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    const userData = { name, email, password };
+    const res = await fetch("/api/users", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    });
+
+    const data = await res.json();
+
+    // 2. Registration successful হলে automatically login
+    if (res.ok) {
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+
+      // 3. Login successful হলে dashboard
+      if (result?.ok) {
+        router.push("/dashboard");
+      }
+    }
+
+    console.log(data);
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-[#0B1120] via-[#111827] to-[#1E293B] flex flex-col lg:flex-row">
+      {/* Left Section */}
+      <div className="hidden lg:flex flex-1 items-center justify-center p-10">
+        <Image
+          src="/assets/login.png" // শুধু এই path পরিবর্তন করবে
+          alt="AI Lead Generation Illustration"
+          width={700}
+          height={700}
+          priority
+          className="w-full max-w-2xl h-auto object-contain"
+        />
+      </div>
+
+      {/* Right Section */}
+      <div className="flex items-center justify-center w-full lg:w-[450px] p-6 lg:p-10">
+        <div className="w-full max-w-md backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl shadow-2xl p-8">
+          {/* Logo */}
+          <div className="flex justify-center mb-8">
+            <h3 className="text-xl text-white font-semibold">
+              New Here ! Register
+            </h3>
+          </div>
+
+          <form onSubmit={handleRegister} className="space-y-5">
+            <input
+              type="text"
+              name="name"
+              placeholder="Name"
+              className="input input-bordered w-full bg-white/10 text-white placeholder:text-gray-400"
+            />
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              className="input input-bordered w-full bg-white/10 text-white placeholder:text-gray-400"
+            />
+
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              className="input input-bordered w-full bg-white/10 text-white placeholder:text-gray-400"
+            />
+
+            <button
+              type="submit"
+              className="btn w-full bg-gradient-to-r from-blue-600 to-cyan-500 border-0 text-white"
+            >
+              Register
+            </button>
+
+            <div className="divider text-gray-400">or</div>
+
+            <button
+              type="button"
+              className="btn w-full bg-white text-gray-800 hover:bg-gray-100"
+            >
+              Continue with Google
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+}
